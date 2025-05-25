@@ -1,11 +1,14 @@
 repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
+if _G.NoLag then return end
+_G.NoLag = true
+
 local Library = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/wth.lua"))()
 local _Settings = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Settings.lua"))()
 local Funcs = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/main/Library/Example/FuncsV3"))()
 
 local Window = Library:CreateWindow({
-	Title = "NoLag Premium | Version: 1.0.0",
+	Title = "No-Lag Keyless | Version: 1.0.0",
 	Description = "",
 	["Tab Width"] = 160
 })
@@ -42,7 +45,7 @@ _spawn(function()
   if _G.Anti_AFK then return end
   _G.Anti_AFK = true
 
-  while task.wait(600) do
+  while task.wait(600) and _G.NoLag do
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -50,9 +53,6 @@ _spawn(function()
 end)
 
 local _Connect = {}
-
-local LastFired = {}
-
 local SaveManager, _SaveConfig = {}, {} do
   local FolderPath = "NoLag"
   local FilePath = FolderPath .. "/GrowAGarden.json"
@@ -105,52 +105,40 @@ local Module = {} do
     end)
   end
 
-  function Module:GetTo(Tween_Pos)
-    local Distance = (Tween_Pos.Position - Player.Character.HumanoidRootPart.Position).Magnitude
-
-    local Tween = TweenService:Create(Player.Character.HumanoidRootPart, TweenInfo.new(Distance / 16, Enum.EasingStyle.Linear), {CFrame = Tween_Pos})
-    Tween:Play()
-
-    if Distance <= 70 then
-      Player.Character.HumanoidRootPart.CFrame = Tween_Pos
+  function Module:enableNoclip()
+    if noclipConnection then return end
+      noclipEnabled = false
+      noclipConnection = RunService.Stepped:Connect(function()
+        if Player.Character and not noclipEnabled then
+          for _, part in pairs(Player.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+              part.CanCollide = false
+            end
+          end
+        end
+      end)
     end
-  end
 
-  function Module:FirePrompt(prompt, Distance)
-    if not (prompt and prompt:IsA("ProximityPrompt")) then return end
+  function Module:disableNoclip()
+    noclipEnabled = true
+    if noclipConnection then
+      noclipConnection:Disconnect()
+      noclipConnection = nil
+    end
 
-    prompt.MaxActivationDistance = Distance or 10
-    prompt.HoldDuration = 0
-
-    pcall(function()
-      prompt:InputHoldBegin()
-      wait(prompt.HoldDuration)
-      prompt:InputHoldEnd()
-    end)
-  end
-
-  function Module:Webhooks(URL, Data)
-    local _req = request or syn and syn.request or http and http.request or fluxus and fluxus.request or http_request
-    if not _req then return end
-
-    local body = HttpService:JSONEncode(Data)
-    local headers = {["Content-Type"] = "application/json"}
-
-    _req({Url = URL, Body = body, Method = "POST", Headers = headers})
-  end
-
-  function Module:EquipTool(Name)
-    local Backpack = Player.Backpack
-    if Backpack then
-      local _Tool = Backpack:FindFirstChild(Name)
-      if _Tool and Player.Character and Player.Character:FindFirstChild("Humanoid") then
-        Player.Character.Humanoid:EquipTool(_Tool)
+    if Player.Character then
+      for _, part in pairs(Player.Character:GetDescendants()) do
+        if part:IsA("BasePart") then
+          part.CanCollide = true
+        end
       end
     end
   end
+
+
 end
 
-local _Discord = Home:AddSection("Discord", true) do
+local _Discord = Home:AddSection("Discord Server", true) do
   Funcs:Button(_Discord, "Discord Invite", "Click to Copy Invite Link", function()
     if Discord then
       setclipboard(Discord)
@@ -158,86 +146,97 @@ local _Discord = Home:AddSection("Discord", true) do
   end)
 end
 
-local _LP = Home:AddSection("LocalPlayer") do
+local _LP = Home:AddSection("Player") do
   Funcs:Textbox(_LP, "Set Speed", "", "Save", function(Value)
     SaveManager:SetSave("Set Speed", Value)
   end)
 
   Funcs:Toggle(_LP, "Enable Walkspeed", "", "Save", function(Value)
     SaveManager:SetSave("Enable Walkspeed", Value)
-  end)
-
-  _spawn(function()
-    Module:Run_Loop("Enable Walkspeed", function()
-      while _SaveConfig["Enable Walkspeed"] and not Library.Unloaded do
+    _spawn(function()
+      local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+      if _SaveConfig["Enable Walkspeed"] then
         local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
         if Humanoid then
           Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
         end
-        task.wait()
-      end
-
-      local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-      if Humanoid then
-        Humanoid.WalkSpeed = 16
+      else
+        if Humanoid then
+          Humanoid.WalkSpeed = 16
+        end
       end
     end)
+--[[       _spawn(function()
+        Module:Run_Loop("Enable Walkspeed", function()
+          while _SaveConfig["Enable Walkspeed"] and not Library.Unloaded do
+            local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+            if Humanoid then
+              Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
+            end
+            task.wait()
+          end
+
+          local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+          if Humanoid then
+            Humanoid.WalkSpeed = 16
+          end
+        end)
+      end) ]]
   end)
 
   Funcs:Toggle(_LP, "No Clip", "", "Save", function(Value)
     SaveManager:SetSave("No Clip", Value)
-  end)
+      _spawn(function()
+        Module:Run_Loop("No Clip", function()
+          while _SaveConfig["No Clip"] and not Library.Unloaded do
+            local Character = Player.Character
 
-  _spawn(function()
-    Module:Run_Loop("No Clip", function()
-      while _SaveConfig["No Clip"] and not Library.Unloaded do
-        local Character = Player.Character
+            if Character then
+              for _, Base in ipairs(Character:GetDescendants()) do
+                if Base:IsA("BasePart") then
+                  Base.CanCollide = false
+                end
+              end
+            end
 
-        if Character then
-          for _, Base in ipairs(Character:GetDescendants()) do
-            if Base:IsA("BasePart") then
-              Base.CanCollide = false
+            task.wait()
+          end
+
+          local Character = Player.Character
+
+          if Character then
+            for _, Base in ipairs(Character:GetDescendants()) do
+              if Base:IsA("BasePart") then
+                Base.CanCollide = true
+              end
             end
           end
-        end
-
-        task.wait()
-      end
-
-      local Character = Player.Character
-
-      if Character then
-        for _, Base in ipairs(Character:GetDescendants()) do
-          if Base:IsA("BasePart") then
-            Base.CanCollide = true
-          end
-        end
-      end
-    end)
+        end)
+      end)
   end)
 
   Funcs:Toggle(_LP, "Infinite Jump", "", "Save", function(Value)
     SaveManager:SetSave("Infinite Jump", Value)
-  end)
-
-  _spawn(function()
-    if _Connect["InfJump"] then
-      _Connect["InfJump"]:Disconnect()
-      _Connect["InfJump"] = nil
-    end
-
-    _Connect["InfJump"] = UserInputService.JumpRequest:Connect(function()
-      if Library.Unloaded then
+    _spawn(function()
+      if _Connect["InfJump"] then
         _Connect["InfJump"]:Disconnect()
         _Connect["InfJump"] = nil
-        return
       end
 
-      if _SaveConfig["Infinite Jump"] then
-        Player.Character.Humanoid:ChangeState("Jumping")
-      end
+      _Connect["InfJump"] = UserInputService.JumpRequest:Connect(function()
+        if Library.Unloaded then
+          _Connect["InfJump"]:Disconnect()
+          _Connect["InfJump"] = nil
+          return
+        end
+
+        if _SaveConfig["Infinite Jump"] then
+          Player.Character.Humanoid:ChangeState("Jumping")
+        end
+      end)
     end)
   end)
+
 
   Funcs:Toggle(_LP, "CTRL + Click to Teleport", "", "Save", function(Value)
     SaveManager:SetSave("CTRL + Click to Teleport", Value)
@@ -353,7 +352,6 @@ end
 local _Other = Misc:AddSection("Other") do
   Funcs:Toggle(_Other, "Full Bright", "", "Save", function(Value)
     SaveManager:SetSave("Full Bright", Value)
-
     _spawn(function()
       while _SaveConfig["Full Bright"] and not Library.Unloaded do task.wait()
         Lighting.Brightness = 2
