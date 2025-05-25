@@ -142,7 +142,7 @@ function CircleClick(Button, X, Y)
         Button.ClipsDescendants = true
 
         local Square = Instance.new("ImageLabel")
-        Square.Image = "rbxassetid://107543146996996"  -- Square image
+        Square.Image = "rbxassetid://106471194043211"  -- Square image
         Square.ImageColor3 = Color3.fromRGB(80, 80, 80)
         Square.ImageTransparency = 0.9
         Square.BackgroundTransparency = 1
