@@ -65,8 +65,8 @@ local function OpenClose()
     BorderColor3 = Color3.fromRGB(255, 0, 0),
     BackgroundTransparency = 1,
     Position = UDim2.new(0.1021, 0, 0.0743, 0),
-    Size = UDim2.new(0, 59, 0, 49),
-    Image = "rbxassetid://136890595976124",
+    Size = UDim2.new(0, 80, 0, 80),
+    Image = "rbxassetid://107543146996996",
     Visible = false,
   }, ScreenGui)
 
@@ -142,11 +142,11 @@ function CircleClick(Button, X, Y)
 		Button.ClipsDescendants = true
 
 		local Circle = Instance.new("ImageLabel")
-		Circle.Image = "rbxassetid://107543146996996"
-		--Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
-		--Circle.ImageTransparency = 0.8999999761581421
-		--Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		--Circle.BackgroundTransparency = 1
+		Circle.Image = "rbxassetid://106471194043211"
+		Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
+		Circle.ImageTransparency = 0.8999999761581421
+		Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Circle.BackgroundTransparency = 1
 		Circle.ZIndex = 10
 		Circle.Name = "Circle"
 		Circle.Parent = Button
