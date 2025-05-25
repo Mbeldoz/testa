@@ -1,4 +1,3 @@
-
 if _G.NoLag then return end
 _G.NoLag = true
 _G.highUNC = false
@@ -343,7 +342,7 @@ local DataLoader = {} do
 
         for _, item in pairs(player.PlayerGui.EventShop_UI.Frame.ScrollingFrame:GetChildren()) do
             if item:FindFirstChild("Main_Frame") then
-                table.insert(Table.LoadStock.event, item.Name)
+                table.insert(Table.LoadStock.event2, item.Name)
             end
         end
 
@@ -1550,7 +1549,7 @@ local function Loop_Shop()
             end
         end
 
-        if Config.AutoBuyEvent2 and #Config.WhitelistEvent2 > 0 and workspace:GetAttribute("BloodMoonEvent") then
+        if Config.AutoBuyEvent2 and #Config.WhitelistEvent2 > 0 and workspace:GetAttribute("NightEvent") then
             local stockData = GameModule:GetStockData(player.PlayerGui.EventShop_UI.Frame.ScrollingFrame)
             local cash = player.leaderstats.Sheckles.Value
             for _, seedName in ipairs(Config.WhitelistEvent2) do
