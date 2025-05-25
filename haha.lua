@@ -1,6 +1,6 @@
 repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
-local Library = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/main/Library/Optimitzed_V5.lua"))()
+local Library = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/wth.lua"))()
 local _Settings = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Settings.lua"))()
 local Funcs = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Main/main/Library/Example/FuncsV3"))()
 
@@ -9,7 +9,8 @@ local Window = Library:CreateWindow({
 	Description = "",
 	["Tab Width"] = 160
 })
-
+--loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Garden/utility/MobileDex.lua"))()
+--loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/haha.lua"))()
 local Home = Window:CreateTab({["Name"] = " | Home", ["Icon"] = "rbxassetid://10734942198"})
 local Main = Window:CreateTab({["Name"] = " | Main", ["Icon"] = "rbxassetid://10723407389"})
 local Misc = Window:CreateTab({["Name"] = " | Miscellaneous", ["Icon"] = "rbxassetid://11447063791"})
