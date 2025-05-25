@@ -809,7 +809,7 @@ function Speed_Library:CreateWindow(Config)
 
     local Tab = Custom:Create("Frame", {
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-			BackgroundTransparency = CountTab == 0 and 0.6 or 0.999,
+			BackgroundTransparency = CountTab == 0 and 0.8 or 0.999,
 			BorderColor3 = Color3.fromRGB(0, 0, 0),
 			BorderSizePixel = 0,
 			LayoutOrder = CountTab,
@@ -1076,10 +1076,10 @@ function Speed_Library:CreateWindow(Config)
             end
           end
 
-          TweenService:Create(FeatureFrame, TweenInfo.new(0.1), {Rotation = 90}):Play()
-          TweenService:Create(Section, TweenInfo.new(0.1), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
-          TweenService:Create(SectionAdd, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
-          TweenService:Create(SectionDecideFrame, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 2)}):Play()
+          TweenService:Create(FeatureFrame, TweenInfo.new(0.05), {Rotation = 90}):Play()
+          TweenService:Create(Section, TweenInfo.new(0.05), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
+          TweenService:Create(SectionAdd, TweenInfo.new(0.05), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
+          TweenService:Create(SectionDecideFrame, TweenInfo.new(0.05), {Size = UDim2.new(1, 0, 0, 2)}):Play()
 
           task.wait(0.2)
           UpdateSizeScroll()
@@ -1090,9 +1090,9 @@ function Speed_Library:CreateWindow(Config)
         CircleClick(SectionButton, Player:GetMouse().X, Player:GetMouse().Y)
 
         if OpenSection then
-          TweenService:Create(FeatureFrame, TweenInfo.new(0.1), {Rotation = 0}):Play()
-          TweenService:Create(Section, TweenInfo.new(0.1), {Size = UDim2.new(1, 1, 0, 30)}):Play()
-          TweenService:Create(SectionDecideFrame, TweenInfo.new(0.1), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+          TweenService:Create(FeatureFrame, TweenInfo.new(0.05), {Rotation = 0}):Play()
+          TweenService:Create(Section, TweenInfo.new(0.05), {Size = UDim2.new(1, 1, 0, 30)}):Play()
+          TweenService:Create(SectionDecideFrame, TweenInfo.new(0.05), {Size = UDim2.new(0, 0, 0, 2)}):Play()
 
           OpenSection = false
           task.wait(0.1)
