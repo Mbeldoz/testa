@@ -138,43 +138,41 @@ local function MakeDraggable(topbarobject, object)
 end
 
 function CircleClick(Button, X, Y)
-	task.spawn(function()
-		Button.ClipsDescendants = true
+  task.spawn(function()
+        Button.ClipsDescendants = true
 
-		local Circle = Instance.new("ImageLabel")
-		Circle.Image = "rbxassetid://136351962357977"
-		Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
-		Circle.ImageTransparency = 0.8999999761581421
-		Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		Circle.BackgroundTransparency = 1
-		Circle.ZIndex = 10
-		Circle.Name = "Circle"
-		Circle.Parent = Button
+        local Square = Instance.new("ImageLabel")
+        Square.Image = "rbxassetid://107543146996996"  -- Square image
+        Square.ImageColor3 = Color3.fromRGB(80, 80, 80)
+        Square.ImageTransparency = 0.9
+        Square.BackgroundTransparency = 1
+        Square.ZIndex = 10
+        Square.Name = "Square"
+        Square.Parent = Button
 
-		local NewX = X - Button.AbsolutePosition.X
-		local NewY = Y - Button.AbsolutePosition.Y
-		Circle.Position = UDim2.new(0, NewX, 0, NewY)
+        local NewX = X - Button.AbsolutePosition.X
+        local NewY = Y - Button.AbsolutePosition.Y
+        Square.Position = UDim2.new(0, NewX, 0, NewY)
+        Square.AnchorPoint = Vector2.new(0.5, 0.5)  -- Center the anchor point
 
-		local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
+        local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
 
-		local Time = 0.5
-		local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local Time = 0.5
+        local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-		local Tween = TweenService:Create(Circle, TweenInfo, {
-			Size = UDim2.new(0, Size, 0, Size),
-			Position = UDim2.new(0.5, -Size/2, 0.5, -Size/2)
-		})
+        local Tween = TweenService:Create(Square, TweenInfo, {
+            Size = UDim2.new(0, Size, 0, Size),
+            Position = UDim2.new(0.5, -Size/2, 0.5, -Size/2),
+            Rotation = 90,  -- Add some rotation for visual effect
+            ImageTransparency = 1  -- Fade out completely
+        })
 
-		Tween:Play()
+        Tween:Play()
 
-		Tween.Completed:Connect(function()
-			for i = 1, 10 do
-				Circle.ImageTransparency = Circle.ImageTransparency + 0.01
-				wait(Time / 10)
-			end
-			Circle:Destroy()
-		end)
-	end)
+        Tween.Completed:Connect(function()
+            Square:Destroy()
+        end)
+    end)
 end
 
 local Speed_Library, Notification = {}, {}
