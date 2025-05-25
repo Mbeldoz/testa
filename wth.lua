@@ -66,7 +66,7 @@ local function OpenClose()
     BackgroundTransparency = 1,
     Position = UDim2.new(0.1021, 0, 0.0743, 0),
     Size = UDim2.new(0, 59, 0, 49),
-    Image = "rbxassetid://107543146996996",
+    Image = "rbxassetid://136890595976124",
     Visible = false,
   }, ScreenGui)
 
@@ -155,7 +155,7 @@ function CircleClick(Button, X, Y)
 		local NewY = Y - Button.AbsolutePosition.Y
 		Circle.Position = UDim2.new(0, NewX, 0, NewY)
 
-		local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
+		local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 3
 
 		local Time = 0.5
 		local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
