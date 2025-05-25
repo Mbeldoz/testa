@@ -66,7 +66,7 @@ local function OpenClose()
     BackgroundTransparency = 1,
     Position = UDim2.new(0.1021, 0, 0.0743, 0),
     Size = UDim2.new(0, 59, 0, 49),
-    Image = "rbxassetid://136351962357977",
+    Image = "rbxassetid://136890595976124",
     Visible = false,
   }, ScreenGui)
 
@@ -138,43 +138,43 @@ local function MakeDraggable(topbarobject, object)
 end
 
 function CircleClick(Button, X, Y)
-    task.spawn(function()
-        Button.ClipsDescendants = true
+	task.spawn(function()
+		Button.ClipsDescendants = true
 
-        local Circle = Instance.new("ImageLabel")
-        Circle.Name = "Circle"  -- Keeping the original name
-        Circle.Image = "rbxassetid://106471194043211"  -- Your square image
-        Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
-        Circle.ImageTransparency = 0.7  -- Reduced from 0.9 for better visibility
-        Circle.BackgroundTransparency = 1
-        Circle.ZIndex = 10
-        Circle.Parent = Button
+		local Circle = Instance.new("ImageLabel")
+		Circle.Image = "rbxassetid://106471194043211"
+		Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
+		Circle.ImageTransparency = 0.8999999761581421
+		Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Circle.BackgroundTransparency = 1
+		Circle.ZIndex = 10
+		Circle.Name = "Circle"
+		Circle.Parent = Button
 
-        -- Set initial size (important for square images)
-        Circle.Size = UDim2.new(0, 1, 0, 1)
+		local NewX = X - Button.AbsolutePosition.X
+		local NewY = Y - Button.AbsolutePosition.Y
+		Circle.Position = UDim2.new(0, NewX, 0, NewY)
 
-        -- Calculate position relative to button
-        local NewX = X - Button.AbsolutePosition.X
-        local NewY = Y - Button.AbsolutePosition.Y
-        Circle.Position = UDim2.new(0, NewX, 0, NewY)
-        Circle.AnchorPoint = Vector2.new(0.5, 0.5)  -- Center scaling
+		local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
 
-        local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
+		local Time = 0.5
+		local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-        local Time = 0.5
-        local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+		local Tween = TweenService:Create(Circle, TweenInfo, {
+			Size = UDim2.new(0, Size, 0, Size),
+			Position = UDim2.new(0.5, -Size/2, 0.5, -Size/2)
+		})
 
-        local Tween = TweenService:Create(Circle, TweenInfo, {
-            Size = UDim2.new(0, Size, 0, Size),
-            Position = UDim2.new(0.5, -Size/2, 0.5, -Size/2),
-            ImageTransparency = 1  -- Fade out completely
-        })
+		Tween:Play()
 
-        Tween:Play()
-        Tween.Completed:Connect(function()
-            Circle:Destroy()
-        end)
-    end)
+		Tween.Completed:Connect(function()
+			for i = 1, 10 do
+				Circle.ImageTransparency = Circle.ImageTransparency + 0.01
+				wait(Time / 10)
+			end
+			Circle:Destroy()
+		end)
+	end)
 end
 
 local Speed_Library, Notification = {}, {}
