@@ -809,7 +809,7 @@ function Speed_Library:CreateWindow(Config)
 
     local Tab = Custom:Create("Frame", {
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-			BackgroundTransparency = CountTab == 0 and 0.92 or 0.999,
+			BackgroundTransparency = CountTab == 0 and 0.6 or 0.999,
 			BorderColor3 = Color3.fromRGB(0, 0, 0),
 			BorderSizePixel = 0,
 			LayoutOrder = CountTab,
@@ -867,7 +867,7 @@ function Speed_Library:CreateWindow(Config)
       LayersPageLayout:JumpToIndex(0)
       NameTab.Text = _Name
 
-      local ChooseFrame = Custom:Create("Frame", {
+--[[       local ChooseFrame = Custom:Create("Frame", {
         BackgroundTransparency = 1,
         BackgroundColor3 = Custom.ColorRGB,
         BorderColor3 = Color3.fromRGB(0, 0, 0),
@@ -882,7 +882,7 @@ function Speed_Library:CreateWindow(Config)
         Thickness = 1.6,
       }, ChooseFrame)
 
-      Custom:Create("UICorner", {}, ChooseFrame)
+      Custom:Create("UICorner", {}, ChooseFrame) ]]
     end
 
     TabButton.Activated:Connect(function()
@@ -1081,7 +1081,7 @@ function Speed_Library:CreateWindow(Config)
           TweenService:Create(SectionAdd, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
           TweenService:Create(SectionDecideFrame, TweenInfo.new(0.1), {Size = UDim2.new(1, 0, 0, 2)}):Play()
 
-          task.wait(0.5)
+          task.wait(0.2)
           UpdateSizeScroll()
         end
       end
