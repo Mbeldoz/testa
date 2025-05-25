@@ -867,7 +867,7 @@ function Speed_Library:CreateWindow(Config)
       LayersPageLayout:JumpToIndex(0)
       NameTab.Text = _Name
 
---[[       local ChooseFrame = Custom:Create("Frame", {
+      local ChooseFrame = Custom:Create("Frame", {
         BackgroundTransparency = 1,
         BackgroundColor3 = Custom.ColorRGB,
         BorderColor3 = Color3.fromRGB(0, 0, 0),
@@ -877,7 +877,7 @@ function Speed_Library:CreateWindow(Config)
         Name = "ChooseFrame",
       }, Tab)
 
-      Custom:Create("UIStroke", {
+--[[       Custom:Create("UIStroke", {
         Color = Custom.ColorRGB,
         Thickness = 1.6,
       }, ChooseFrame)
