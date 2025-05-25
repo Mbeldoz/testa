@@ -6,7 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 local VirtualUser = game:GetService("VirtualUser")
 
 local Custom = {} do
-  Custom.ColorRGB = Color3.fromRGB(250, 7, 7)
+  Custom.ColorRGB = Color3.fromRGB(255, 255, 255)
 
   function Custom:Create(Name, Properties, Parent)
     local _instance = Instance.new(Name)
@@ -868,6 +868,7 @@ function Speed_Library:CreateWindow(Config)
       NameTab.Text = _Name
 
       local ChooseFrame = Custom:Create("Frame", {
+        BackgroundTransparency = 1,
         BackgroundColor3 = Custom.ColorRGB,
         BorderColor3 = Color3.fromRGB(0, 0, 0),
         BorderSizePixel = 0,
@@ -902,12 +903,12 @@ function Speed_Library:CreateWindow(Config)
       if FrameChoose and Tab.LayoutOrder ~= LayersPageLayout.CurrentPage.LayoutOrder then
         for _, TabFrame in pairs(ScrollTab:GetChildren()) do
           if TabFrame.Name == "Tab" then
-            TweenService:Create(TabFrame, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.999}):Play()
+            TweenService:Create(TabFrame, TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.999}):Play()
           end
         end
 
-        local _TabT = TweenService:Create(Tab, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.92})
-        local _FTween = TweenService:Create(FrameChoose, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Position = UDim2.new(0, 2, 0, 9 + (33 * Tab.LayoutOrder)) })
+        local _TabT = TweenService:Create(Tab, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.92})
+        local _FTween = TweenService:Create(FrameChoose, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), { Position = UDim2.new(0, 2, 0, 9 + (33 * Tab.LayoutOrder)) })
 
         _TabT:Play()
         _FTween:Play()
