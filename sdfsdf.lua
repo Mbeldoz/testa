@@ -2,7 +2,7 @@ if _G.NoLag then return end
 _G.NoLag = true
 _G.highUNC = false
 
-local version = "5.9"
+local version = "5.9o"
 local name_game = "Grow A Garden"
 local Fluent = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/UI_FLUENT.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/Temp_save.lua"))()
@@ -1537,7 +1537,7 @@ local function Loop_Shop()
             end
         end
 
-        if Config.AutoBuyEvent and #Config.WhitelistEvent > 0 and workspace:GetAttribute("BloodMoonEvent") then
+        if Config.AutoBuyEvent and #Config.WhitelistEvent > 0 and workspace:GetAttribute("NightEvent") then
             local stockData = GameModule:GetStockData(player.PlayerGui.NightEventShop_UI.Frame.ScrollingFrame)
             local cash = player.leaderstats.Sheckles.Value
             for _, seedName in ipairs(Config.WhitelistEvent) do
@@ -1549,7 +1549,7 @@ local function Loop_Shop()
             end
         end
 
-        if Config.AutoBuyEvent2 and #Config.WhitelistEvent2 > 0 and workspace:GetAttribute("NightEvent") then
+        if Config.AutoBuyEvent2 and #Config.WhitelistEvent2 > 0 and workspace:GetAttribute("BloodMoonEvent") then
             local stockData = GameModule:GetStockData(player.PlayerGui.EventShop_UI.Frame.ScrollingFrame)
             local cash = player.leaderstats.Sheckles.Value
             for _, seedName in ipairs(Config.WhitelistEvent2) do
