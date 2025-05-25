@@ -138,39 +138,41 @@ local function MakeDraggable(topbarobject, object)
 end
 
 function CircleClick(Button, X, Y)
-  task.spawn(function()
+    task.spawn(function()
         Button.ClipsDescendants = true
 
-        local Square = Instance.new("ImageLabel")
-        Square.Image = "rbxassetid://106471194043211"  -- Square image
-        Square.ImageColor3 = Color3.fromRGB(80, 80, 80)
-        Square.ImageTransparency = 0.9
-        Square.BackgroundTransparency = 1
-        Square.ZIndex = 10
-        Square.Name = "Square"
-        Square.Parent = Button
+        local Circle = Instance.new("ImageLabel")
+        Circle.Name = "Circle"  -- Keeping the original name
+        Circle.Image = "rbxassetid://106471194043211"  -- Your square image
+        Circle.ImageColor3 = Color3.fromRGB(80, 80, 80)
+        Circle.ImageTransparency = 0.7  -- Reduced from 0.9 for better visibility
+        Circle.BackgroundTransparency = 1
+        Circle.ZIndex = 10
+        Circle.Parent = Button
 
+        -- Set initial size (important for square images)
+        Circle.Size = UDim2.new(0, 1, 0, 1)
+
+        -- Calculate position relative to button
         local NewX = X - Button.AbsolutePosition.X
         local NewY = Y - Button.AbsolutePosition.Y
-        Square.Position = UDim2.new(0, NewX, 0, NewY)
-        Square.AnchorPoint = Vector2.new(0.5, 0.5)  -- Center the anchor point
+        Circle.Position = UDim2.new(0, NewX, 0, NewY)
+        Circle.AnchorPoint = Vector2.new(0.5, 0.5)  -- Center scaling
 
         local Size = math.max(Button.AbsoluteSize.X, Button.AbsoluteSize.Y) * 1.5
 
         local Time = 0.5
         local TweenInfo = TweenInfo.new(Time, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-        local Tween = TweenService:Create(Square, TweenInfo, {
+        local Tween = TweenService:Create(Circle, TweenInfo, {
             Size = UDim2.new(0, Size, 0, Size),
             Position = UDim2.new(0.5, -Size/2, 0.5, -Size/2),
-            Rotation = 90,  -- Add some rotation for visual effect
             ImageTransparency = 1  -- Fade out completely
         })
 
         Tween:Play()
-
         Tween.Completed:Connect(function()
-            Square:Destroy()
+            Circle:Destroy()
         end)
     end)
 end
