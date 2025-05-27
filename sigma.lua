@@ -14,6 +14,7 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
+ game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 local playername = player.Name
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
@@ -144,61 +145,40 @@ local BaseModule = {} do
 
     function BaseModule:hopServer()
         local placeId = game.PlaceId
+        local servers = {}
+        local success, err = pcall(function()
+            servers = game:GetService("HttpService"):JSONDecode(
+                game:HttpGet("https://games.roblox.com/v1/games/"..placeId.."/servers/Public?sortOrder=Asc&limit=100")
+            )
+        end)
+
+        if not success or not servers.data then
+            warn("Failed to get servers: "..tostring(err))
+            return false
+        end
+
+        local viableServers = {}
         local currentJobId = game.JobId
-        local maxAttempts = 5
-        local attempt = 0
 
-        while attempt < maxAttempts do
-            attempt = attempt + 1
-
-            local servers = {}
-            local success, err = pcall(function()
-                servers = game:GetService("HttpService"):JSONDecode(
-                    game:HttpGet("https://games.roblox.com/v1/games/"..placeId.."/servers/Public?sortOrder=Asc&limit=100")
-                )
-            end)
-
-            if not success or not servers.data then
-                warn("Attempt "..attempt..": Failed to get servers - "..tostring(err))
-                task.wait(1) -- Wait a second before retrying
-                continue
-            end
-
-            local viableServers = {}
-            for _, server in ipairs(servers.data) do
-                if server.playing and server.playing > 0
-                and server.playing < server.maxPlayers
-                and server.id ~= currentJobId then
-                    table.insert(viableServers, server)
-                end
-            end
-
-            if #viableServers == 0 then
-                warn("Attempt "..attempt..": No viable servers found")
-                task.wait(1)
-                continue
-            end
-
-            local targetServer = viableServers[math.random(1, #viableServers)]
-
-            local teleportSuccess = pcall(function()
-                game:GetService("TeleportService"):TeleportToPlaceInstance(
-                    placeId,
-                    targetServer.id,
-                    game.Players.LocalPlayer
-                )
-            end)
-
-            if teleportSuccess then
-                return true
-            else
-                warn("Attempt "..attempt..": Teleport failed")
-                task.wait(1)
+        for _, server in ipairs(servers.data) do
+            if server.playing and server.playing > 0
+               and server.playing < server.maxPlayers
+               and server.id ~= currentJobId then
+                table.insert(viableServers, server)
             end
         end
 
-        warn("Failed to hop servers after "..maxAttempts.." attempts")
-        return false
+        if #viableServers == 0 then return false end
+
+        local targetServer = viableServers[math.random(1, #viableServers)]
+
+        game:GetService("TeleportService"):TeleportToPlaceInstance(
+            placeId,
+            targetServer.id,
+            game.Players.LocalPlayer
+        )
+
+        return true
     end
 end
 
@@ -299,7 +279,7 @@ local Table = {
     },
     SavePos = {},
     Venus_Quest = {},
-    SeedData = {"All Selection", "Apple", "Avocado", "Bamboo", "Banana", "Beanstalk","Blueberry", "Blood Banana","Cacao", "Cactus", "Candy Blossom", "Candy Sunflower", "Carrot", "Cherry Blossom", "Chocolate Carrot", "Coconut", "Corn", "Cranberry", "Crimson Vine", "Cursed Fruit", "Daffodil", "Dragon Fruit", "Durian", "Easter Egg", "Eggplant", "Glowshroom", "Grape", "Lemon", "Lotus", "Mango", "Mint", "Moon Blossom", "Moonglow", "Moonflower", "Moon Melon", "Mushroom", "Nightshade", "Orange Tulip", "Papaya", "Passionfruit", "Peach", "Pear", "Pepper", "Pineapple", "Pumpkin", "Raspberry", "Red Lollipop", "Soul Fruit", "Starfruit", "Strawberry", "Succulent", "Tomato", "Venus Fly Trap", "Watermelon"},
+    SeedData = {"All Selection", "Apple", "Avocado", "Bamboo", "Banana", "Beanstalk","Blueberry", "Blood Banana","Cacao", "Cactus", "Candy Blossom", "Candy Sunflower", "Carrot", "Celestiberry","Cherry Blossom", "Chocolate Carrot", "Coconut", "Corn", "Cranberry", "Crimson Vine", "Cursed Fruit", "Daffodil", "Dragon Fruit", "Durian", "Easter Egg", "Eggplant", "Glowshroom", "Grape", "Lemon", "Lotus", "Mango", "Mint", "Moon Blossom", "Moonglow", "Moonflower", "Moon Mango", "Moon Melon", "Mushroom", "Nightshade", "Orange Tulip", "Papaya", "Passionfruit", "Peach", "Pear", "Pepper", "Pineapple", "Pumpkin", "Raspberry", "Red Lollipop", "Soul Fruit", "Starfruit", "Strawberry", "Succulent", "Tomato", "Venus Fly Trap", "Watermelon"},
     Egglist = {"Common Egg", "Uncommon Egg", "Rare Egg", "Epic Egg", "Legendary Egg", "Mythical Egg", "Divine Egg", "Bug Egg", "Exotic Bug Egg", "Night Egg"},
     RareStock = {"Master Sprinkler", "Lightning Rod", "Godly Sprinkler", "Grape", "Mushroom", "Pepper", "Legendary Egg", "Bug Egg"},
     WeatherData = { "RainEvent", "Thunderstorm", "FrostEvent", "SheckleRain", "NightEvent" },
@@ -1109,11 +1089,14 @@ local GameModule = {} do
 
     function GameModule:PlaceGear()
         if Config.Sprinkler then
+            print("ConfigSprinkler")
             for _, tool in ipairs(Config.Sprinker) do
                 for _, item in ipairs(player.Backpack:GetChildren()) do
                     if item:GetAttribute("ItemName") == tool then
+                        print("GetAttribute")
                         character:FindFirstChildOfClass("Humanoid"):EquipTool(item)
                         if Config.SavePos2 then
+                            print("SavePos")
                             local position = CFrame.new(Config.SavePos2[1], 0.135525137, Config.SavePos2[2], 0.064701885, 0.857260585, -0.510801494, -0, 0.51187402, 0.859060585, 0.997904658, -0.05558284, 0.0331192128)
                             GameEvents.SprinklerService:FireServer("Create", position)
                             task.wait(0.2)
