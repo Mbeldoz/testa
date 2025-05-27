@@ -1884,7 +1884,7 @@ Window:Dialog({
         local ServerHopper = Tabs.Main:AddToggle("ServerHopper", {Title = "Hop Server Version", Description = "10 Seconds Delay Before Hopping", Default = false })
         ServerHopper:OnChanged(function()
             BaseVar.ServerHopper = Options.ServerHopper.Value
-            if BaseVar.ServerHopper then
+            if BaseVar.ServerHopper == true then
                 task.spawn(function()
                     task.wait(10)
                     local version = game:GetService("CoreGui").RobloxGui.SettingsClippingShield.SettingsShield.VersionContainer.PlaceVersionLabel.Text:match("%d+")
