@@ -143,41 +143,7 @@ local BaseModule = {} do
     end
 
     function BaseModule:hopServer()
-        local placeId = game.PlaceId
-        local servers = {}
-        local success, err = pcall(function()
-            servers = game:GetService("HttpService"):JSONDecode(
-                game:HttpGet("https://games.roblox.com/v1/games/"..placeId.."/servers/Public?sortOrder=Asc&limit=100")
-            )
-        end)
-
-        if not success or not servers.data then
-            warn("Failed to get servers: "..tostring(err))
-            return false
-        end
-
-        local viableServers = {}
-        local currentJobId = game.JobId
-
-        for _, server in ipairs(servers.data) do
-            if server.playing and server.playing > 0
-               and server.playing < server.maxPlayers
-               and server.id ~= currentJobId then
-                table.insert(viableServers, server)
-            end
-        end
-
-        if #viableServers == 0 then return false end
-
-        local targetServer = viableServers[math.random(1, #viableServers)]
-
-        game:GetService("TeleportService"):TeleportToPlaceInstance(
-            placeId,
-            targetServer.id,
-            game.Players.LocalPlayer
-        )
-
-        return true
+        game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
     end
 end
 
