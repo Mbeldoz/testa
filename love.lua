@@ -1,57 +1,69 @@
 local function ForceHop()
     local placeId = game.PlaceId
     local currentJobId = game.JobId
-    local attempts = 0
     local maxAttempts = 10
-    
-    print("🔥 Starting force hop - Finding ANY other server...")
-    
-    while attempts < maxAttempts do
-        attempts += 1
-        print(`Attempt {attempts}`)
-        
-        -- Bypass-style HTTP request (works in most executors)
+    local attemptDelay = 0.5
+
+    print("🚀 Starting ForceHop...")
+
+    for attempt = 1, maxAttempts do
+        print(`Attempt {attempt}/{maxAttempts}`)
+
+        -- Fetch server list with better error handling
         local servers = {}
-        local success, err = pcall(function()
-            servers = game:GetService("HttpService"):JSONDecode(
-                game:HttpGet(`https://games.roblox.com/v1/games/{placeId}/servers/Public?sortOrder=Asc&limit=100`, true)
+        local success, response = pcall(function()
+            return game:HttpGet(
+                `https://games.roblox.com/v1/games/{placeId}/servers/Public?sortOrder=Asc&limit=100`,
+                true  -- Bypass executor restrictions if possible
             )
         end)
-        
+
         if not success then
-            warn("⚠️ API Error:", err)
-            task.wait(0.5)
+            warn("❌ HTTP Request Failed:", response)
+            task.wait(attemptDelay)
             continue
         end
-        
+
+        -- Safely parse JSON
+        local decoded
+        success, decoded = pcall(function()
+            return game:GetService("HttpService"):JSONDecode(response)
+        end)
+
+        if not success or not decoded.data then
+            warn("⚠️ Invalid JSON or API response changed:", decoded)
+            print("Raw Response:", response:sub(1, 100) .. "...") -- Debug first 100 chars
+            task.wait(attemptDelay)
+            continue
+        end
+
         -- Find ANY server that isn't current
-        for _, server in ipairs(servers.data) do
-            if server.id ~= currentJobId then
-                print(`🚀 Found server: {server.id} ({server.playing or "?"} players)`)
-                
-                -- Force teleport (no safety checks)
-                local t = game:GetService("TeleportService")
+        for _, server in ipairs(decoded.data) do
+            if server.id and server.id ~= currentJobId then
+                print(`🎯 Found server: {server.id}`)
+
+                -- Force teleport (no player count checks)
+                local ts = game:GetService("TeleportService")
                 pcall(function()
-                    t:TeleportToPlaceInstance(placeId, server.id)
+                    ts:TeleportToPlaceInstance(placeId, server.id)
                 end)
-                
-                -- Emergency teleport if normal fails
-                task.wait(1)
+
+                -- Fallback to normal teleport if instance fails
+                task.wait(0.5)
                 pcall(function()
-                    t:Teleport(placeId)
+                    ts:Teleport(placeId)
                 end)
-                
+
                 return true
             end
         end
-        
+
         warn("No different servers found, retrying...")
-        task.wait(1)
+        task.wait(attemptDelay)
     end
-    
-    warn("❌ Failed after", maxAttempts, "attempts")
+
+    warn("❌ Failed after max attempts")
     return false
 end
-
--- Execute immediately
+print("Execute")
 ForceHop()
