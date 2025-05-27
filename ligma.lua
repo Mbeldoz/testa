@@ -14,7 +14,6 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
- game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 local playername = player.Name
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
