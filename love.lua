@@ -19,7 +19,7 @@ local function ForceHop()
         end)
 
         if not success then
-            warn("❌ HTTP Request Failed:", response)
+            warn("new❌ HTTP Request Failed:", response)
             task.wait(attemptDelay)
             continue
         end
@@ -62,7 +62,7 @@ local function ForceHop()
         task.wait(attemptDelay)
     end
 
-    warn("❌ Failed after max attempts")
+    warn("new❌ Failed after max attempts")
     return false
 end
 print("Execute")
