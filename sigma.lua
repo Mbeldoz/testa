@@ -2,7 +2,7 @@ if _G.NoLag then return end
 _G.NoLag = true
 _G.highUNC = false
 
-local version = "5.9"
+local version = "6.0"
 local name_game = "Grow A Garden"
 local Fluent = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/UI_FLUENT.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/Temp_save.lua"))()
@@ -1995,7 +1995,7 @@ Window:Dialog({
         local Section = Tabs.Automatic:AddSection("Collect Fruit")
         local CollectMode = Tabs.Automatic:AddDropdown("CollectMode", {
             Title = "Collect Mode",
-            Values = {"Normal", "Fast"},
+            Values = {"Normal", "Slow", "Fast", "Aura (For Bad Device)"},
             Multi = false,
             Default = 1,
         })
@@ -2046,7 +2046,7 @@ Window:Dialog({
 
         local CollectMode4 = Tabs.Automatic:AddDropdown("CollectMode4", {
             Title = "Filter Mode",
-            Values = {"Whitelist", "Blacklist"},
+            Values = {"Whitelist", "Blacklist", "Match All"},
             Multi = false,
             Default = "",
         })
