@@ -728,7 +728,7 @@ local GameModule = {} do
         print("placeRandomEgg - Starting")
 
         -- First get the player's garden
-        local garden = GameModule:GetGarden()
+        local garden = GameModule:GetPlantLocation(1)
         if not garden then
             warn("Could not find garden!")
             return
