@@ -2512,16 +2512,20 @@ Window:Dialog({
                             for _, item in ipairs(player.Backpack:GetChildren()) do
                                 if item:GetAttribute("ItemName") == tool then
                                     character:FindFirstChildOfClass("Humanoid"):EquipTool(item)
-                                    local pos1 = tonumber(math.floor(Config.SavePos2[1]))
-                                    local pos2 = tonumber(math.floor(Config.SavePos2[2]))
+                                    local x = tonumber(Config.SavePos2[1])
+                                    local z = tonumber(Config.SavePos2[2])
+                                    local y = 0.13552784453468323  -- Fixed Y from your CFrame
                                     print("Placing : ", pos1, pos2)
                                     task.wait(1)
-                                    local args = {
-                                        "Create",
-                                        CFrame.new(Config.SavePos2[1], 0.13552704453468323, Config.SavePos2[2], 0.064701885, 0.857260585, -0.510801494, -0, 0.51187402, 0.859060585, 0.997904658, -0.05558284, 0.0331192128)
-                                    }
-                                    GameEvents.SprinklerService:FireServer(unpack{args})
-                                    task.wait(0.2)
+                                    local newCFrame = CFrame.new(
+                                        x, y, z,
+                                        -0, 0.9960811839866638, -0.08934823231267929,
+                                        0.0968479169811116, 0.08897878782226923, 0.9918825626372291,
+                                        0.995864748954773, -0.00811637379229668, -0.09848464149236679
+                                    )
+
+                                    -- Fire the remote (assuming GameEvents exists)
+                                    GameEvents.SprinklerService:FireServer("Create", newCFrame)
                                 end
                             end
                         end
