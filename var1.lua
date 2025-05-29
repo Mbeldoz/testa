@@ -1,4 +1,3 @@
-
 if _G.NoLag then return end
 _G.NoLag = true
 _G.highUNC = false
@@ -726,6 +725,7 @@ local GameModule = {} do
     end
 
     function GameModule:placeRandomEgg()
+        print("placeRandomEgg")
         -- First get the player's garden
         local garden = GameModule:GetGarden()
 
@@ -2507,22 +2507,20 @@ Window:Dialog({
             Title = "Place Gear",
             Callback = function()
                 if #Config.Sprinkler > 0 then
-                    print("ConfigSprinkler")
                     if Config.SavePos2 and #Config.SavePos2 >= 2 then
-                        print("ConfigSavePos")
                         for _, tool in ipairs(Config.Sprinkler) do
                             for _, item in ipairs(player.Backpack:GetChildren()) do
                                 if item:GetAttribute("ItemName") == tool then
-                                    print("GetAttribute")
                                     character:FindFirstChildOfClass("Humanoid"):EquipTool(item)
-                                    local position = CFrame.new(
-                                        math.floor(Config.SavePos2[1]), 0.135525137, math.floor(Config.SavePos2[2]),
-                                        0.064701885, 0.857260585, -0.510801494,
-                                        0,          0.51187402,   0.859060585,
-                                        0.997904658, -0.05558284, 0.0331192128
-                                    )
-                                    print("Placing")
-                                    GameEvents.SprinklerService:FireServer("Create", position)
+                                    local pos1 = tonumber(math.floor(Config.SavePos2[1]))
+                                    local pos2 = tonumber(math.floor(Config.SavePos2[2]))
+                                    print("Placing : ", pos1, pos2)
+                                    task.wait(1)
+                                    local args = {
+                                        "Create",
+                                        CFrame.new(Config.SavePos2[1], 0.13552704453468323, Config.SavePos2[2], 0.064701885, 0.857260585, -0.510801494, -0, 0.51187402, 0.859060585, 0.997904658, -0.05558284, 0.0331192128)
+                                    }
+                                    GameEvents.SprinklerService:FireServer(unpack{args})
                                     task.wait(0.2)
                                 end
                             end
