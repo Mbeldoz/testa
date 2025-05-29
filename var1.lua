@@ -725,67 +725,87 @@ local GameModule = {} do
     end
 
     function GameModule:placeRandomEgg()
-        print("placeRandomEgg")
+        print("placeRandomEgg - Starting")
 
         -- First get the player's garden
         local garden = GameModule:GetGarden()
+        if not garden then
+            warn("Could not find garden!")
+            return
+        end
+        print("Found garden at:", garden:GetFullName())
+
         local GARDEN_SIZE_X = 31
         local GARDEN_SIZE_Z = 59
-        local ITEM_SIZE = 5  -- Assuming a 5x5 area per egg
+        local ITEM_SIZE = 5
         local maxAttempts = 100
         local attempt = 0
-        local gardenCenter = garden.CFrame.Position  -- Center of the garden
+        local gardenCenter = garden.CFrame.Position
+
+        print("Garden center:", gardenCenter)
+
+        -- Check if Object_Physical exists
+        if not garden:FindFirstChild("Important") then
+            warn("No 'Important' folder found in garden!")
+            return
+        end
+
+        if not garden.Important:FindFirstChild("Object_Physical") then
+            warn("No 'Object_Physical' folder found!")
+            return
+        end
 
         local existingEggs = {}
-        if garden.Important.Object_Physical then
-            print("Garden")
-            for _, obj in pairs(garden.Important.Object_Physical:GetChildren()) do
-                if obj:IsA("Model") and obj.Name == "PetEgg" then
-                    local hitbox = obj:FindFirstChild("PetEgg")
-                    if hitbox and hitbox:IsA("BasePart") then
-                        table.insert(existingEggs, hitbox.CFrame.Position)
-                        print("Found existing egg at:", hitbox.CFrame.Position)
-                    end
+        print("Scanning for existing eggs...")
+
+        for _, obj in pairs(garden.Important.Object_Physical:GetChildren()) do
+            print("Checking object:", obj.Name)
+            if obj:IsA("Model") and obj.Name == "PetEgg" then
+                local hitbox = obj:FindFirstChild("PetEgg")
+                if hitbox and hitbox:IsA("BasePart") then
+                    table.insert(existingEggs, hitbox.CFrame.Position)
+                    print("Found existing egg at:", hitbox.CFrame.Position)
                 end
             end
         end
 
-        print("Find Random Pos")
+        print("Found", #existingEggs, "existing eggs")
+        print("Finding random position...")
+
         while attempt < maxAttempts do
             attempt += 1
-            print("attempt :", attempt)
-            -- Calculate safe spawn area (accounting for item size)
-            local minX = gardenCenter.X - (GARDEN_SIZE_X / 2) + (ITEM_SIZE / 2)
-            local maxX = gardenCenter.X + (GARDEN_SIZE_X / 2) - (ITEM_SIZE / 2)
-            local minZ = gardenCenter.Z - (GARDEN_SIZE_Z / 2) + (ITEM_SIZE / 2)
-            local maxZ = gardenCenter.Z + (GARDEN_SIZE_Z / 2) - (ITEM_SIZE / 2)
 
-            -- Generate random position
-            local randomX = math.random(minX * 100, maxX * 100) / 100
-            local randomZ = math.random(minZ * 100, maxZ * 100) / 100
+            -- Calculate safe area (with item size padding)
+            local safeX = (GARDEN_SIZE_X - ITEM_SIZE) / 2
+            local safeZ = (GARDEN_SIZE_Z - ITEM_SIZE) / 2
+
+            local randomX = gardenCenter.X + math.random(-safeX*100, safeX*100)/100
+            local randomZ = gardenCenter.Z + math.random(-safeZ*100, safeZ*100)/100
             local newPos = Vector3.new(randomX, 0.1355254054069519, randomZ)
 
-            -- Check if far enough from existing eggs
+            -- Check distance to existing eggs
             local isValid = true
-            if existingEggs and #existingEggs > 0 then
-                for _, eggPos in pairs(existingEggs) do
-                    if (newPos - eggPos).Magnitude < ITEM_SIZE then
-                        isValid = false
-                        break
-                    end
+            for _, eggPos in pairs(existingEggs) do
+                if (newPos - eggPos).Magnitude < ITEM_SIZE then
+                    isValid = false
+                    break
                 end
             end
 
-            -- Return if valid
             if isValid then
-                print("Placing at : ", newPos)
+                print("Found valid position at attempt", attempt, ":", newPos)
                 GameEvents.PetEggService:FireServer("CreateEgg", newPos)
+                return true
             end
-            task.wait(0.1)
+
+            if attempt % 10 == 0 then
+                print("Attempt", attempt, "of", maxAttempts)
+            end
+            task.wait() -- Small delay to prevent freezing
         end
 
-        warn("Could not find a valid position after " .. maxAttempts .. " attempts!")
-        return nil
+        warn("Could not find valid position after", maxAttempts, "attempts")
+        return false
     end
 
     function GameModule:CollectSpecificFruit(garden)
