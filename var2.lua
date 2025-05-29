@@ -751,7 +751,7 @@ local GameModule = {} do
             return
         end
 
-        if not garden.Important:FindFirstChild("Object_Physical") then
+        if not garden.Important:FindFirstChild("Objects_Physical") then
             warn("No 'Object_Physical' folder found!")
             return
         end
@@ -759,7 +759,7 @@ local GameModule = {} do
         local existingEggs = {}
         print("Scanning for existing eggs...")
 
-        for _, obj in pairs(garden.Important.Object_Physical:GetChildren()) do
+        for _, obj in pairs(garden.Important.Objects_Physical:GetChildren()) do
             print("Checking object:", obj.Name)
             if obj:IsA("Model") and obj.Name == "PetEgg" then
                 local hitbox = obj:FindFirstChild("PetEgg")
