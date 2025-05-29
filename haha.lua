@@ -1,7 +1,7 @@
 repeat task.wait() until game:IsLoaded() and game.Players and game.Players.LocalPlayer and game.Players.LocalPlayer.Character
 
-if _G.NoLag then return end
-_G.NoLag = true
+if _G.NoLagHub then return end
+_G.NoLagHub = true
 
 local Library = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/wth.lua"))()
 local _Settings = (loadstring or load)(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Settings.lua"))()
@@ -12,8 +12,7 @@ local Window = Library:CreateWindow({
 	Description = "",
 	["Tab Width"] = 160
 })
---loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Garden/utility/MobileDex.lua"))()
---loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/haha.lua"))()
+
 local Home = Window:CreateTab({["Name"] = " | Home", ["Icon"] = "rbxassetid://10734942198"})
 local Main = Window:CreateTab({["Name"] = " | Main", ["Icon"] = "rbxassetid://10723407389"})
 local Misc = Window:CreateTab({["Name"] = " | Miscellaneous", ["Icon"] = "rbxassetid://11447063791"})
@@ -21,6 +20,7 @@ local Settings = Window:CreateTab({["Name"] = " | Settings", ["Icon"] = "rbxasse
 
 local setclipboard = setclipboard or function(...) return ... end
 
+local Discord = ""
 local _spawn = task.spawn
 
 local Players = game:GetService("Players")
@@ -45,7 +45,7 @@ _spawn(function()
   if _G.Anti_AFK then return end
   _G.Anti_AFK = true
 
-  while task.wait(600) and _G.NoLag do
+  while task.wait(600) and _G.NoLagHub do
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     task.wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
@@ -91,6 +91,10 @@ local SaveManager, _SaveConfig = {}, {} do
   SaveManager:SetLoad()
   Funcs:SetTable(_SaveConfig)
 end
+
+local _Cache = {
+
+}
 
 local Module = {} do
   function Module:Run_Loop(Name, Func)
@@ -138,59 +142,55 @@ local Module = {} do
 
 end
 
-local _Discord = Home:AddSection("Discord Server", true) do
+local _Discord = Home:AddSection("Discord", true) do
   Funcs:Button(_Discord, "Discord Invite", "Click to Copy Invite Link", function()
     if Discord then
       setclipboard(Discord)
     end
   end)
+
+  Funcs:Button(_Discord, "Dex", "", function()
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Garden/utility/MobileDex.lua"))()
+  end)
+
+  Funcs:Button(_Discord, "Spy", "", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/depthso/Sigma-Spy/refs/heads/main/Main.lua"))()
+  end)
+
+  Funcs:Button(_Discord, "Var1", "", function()
+    print("executed")
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/var1.lua"))()
+  end)
+
+  Funcs:Button(_Discord, "Var2", "", function()
+    print("executed")
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/var2.lua"))()
+  end)
+
+  Funcs:Button(_Discord, "Var3", "", function()
+    print("executed")
+    loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Mbeldoz/testa/refs/heads/main/var3.lua"))()
+  end)
 end
 
 local _LP = Home:AddSection("Player") do
-  Funcs:Textbox(_LP, "Set Speed", "", "Save", function(Value)
+  Funcs:Textbox(_LP, "Speed Value", "Default : 16", "Save", function(Value)
     SaveManager:SetSave("Set Speed", Value)
   end)
 
-  Funcs:Toggle(_LP, "Enable Walkspeed", "", "Save", function(Value)
-    SaveManager:SetSave("Enable Walkspeed", Value)
+  Funcs:Button(_LP, "Apply Speed", "Click to apply walkspeed", function()
     _spawn(function()
       local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-      if _SaveConfig["Enable Walkspeed"] then
-        local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-        if Humanoid then
-          Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
-        end
-      else
-        if Humanoid then
-          Humanoid.WalkSpeed = 16
-        end
-      end
+      Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
     end)
---[[       _spawn(function()
-        Module:Run_Loop("Enable Walkspeed", function()
-          while _SaveConfig["Enable Walkspeed"] and not Library.Unloaded do
-            local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-            if Humanoid then
-              Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
-            end
-            task.wait()
-          end
-
-          local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
-          if Humanoid then
-            Humanoid.WalkSpeed = 16
-          end
-        end)
-      end) ]]
   end)
 
   Funcs:Toggle(_LP, "No Clip", "", "Save", function(Value)
     SaveManager:SetSave("No Clip", Value)
       _spawn(function()
         Module:Run_Loop("No Clip", function()
-          while _SaveConfig["No Clip"] and not Library.Unloaded do
+          while _SaveConfig["No Clip"] and _G.NoLagHub do
             local Character = Player.Character
-
             if Character then
               for _, Base in ipairs(Character:GetDescendants()) do
                 if Base:IsA("BasePart") then
@@ -198,7 +198,6 @@ local _LP = Home:AddSection("Player") do
                 end
               end
             end
-
             task.wait()
           end
 
@@ -224,7 +223,7 @@ local _LP = Home:AddSection("Player") do
       end
 
       _Connect["InfJump"] = UserInputService.JumpRequest:Connect(function()
-        if Library.Unloaded then
+        if not _G.NoLagHub then
           _Connect["InfJump"]:Disconnect()
           _Connect["InfJump"] = nil
           return
@@ -237,28 +236,85 @@ local _LP = Home:AddSection("Player") do
     end)
   end)
 
+  Funcs:Toggle(_LP, "Fly", "", "Save", function(Value)
+    SaveManager:SetSave("Fly", Value)
+    _spawn(function()
 
-  Funcs:Toggle(_LP, "CTRL + Click to Teleport", "", "Save", function(Value)
-    SaveManager:SetSave("CTRL + Click to Teleport", Value)
-  end)
-
-  _spawn(function()
-    if _Connect["ClickTP"] then
-      _Connect["ClickTP"]:Disconnect()
-      _Connect["ClickTP"] = nil
-    end
-
-    _Connect["ClickTP"] = Player:GetMouse().Button1Down:Connect(function()
-      if not Player:GetMouse().Target or Library.Unloaded then _Connect["ClickTP"]:Disconnect() return end
-
-      if _SaveConfig["CTRL + Click to Teleport"] then
-        if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) or UserInputService.TouchEnabled then
-          Player.Character:MoveTo(Player:GetMouse().Hit.p)
-        end
-      end
     end)
   end)
 end
+
+local _Script = Home:AddSection("Other Script") do
+  Funcs:Textbox(_LP, "Speed Value", "Default : 16", "Save", function(Value)
+    SaveManager:SetSave("Set Speed", Value)
+  end)
+
+  Funcs:Button(_LP, "Apply Speed", "Click to apply walkspeed", function()
+    _spawn(function()
+      local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+      Humanoid.WalkSpeed = tonumber(_SaveConfig["Set Speed"]) or 20
+    end)
+  end)
+
+  Funcs:Toggle(_LP, "No Clip", "", "Save", function(Value)
+    SaveManager:SetSave("No Clip", Value)
+      _spawn(function()
+        Module:Run_Loop("No Clip", function()
+          while _SaveConfig["No Clip"] and _G.NoLagHub do
+            local Character = Player.Character
+            if Character then
+              for _, Base in ipairs(Character:GetDescendants()) do
+                if Base:IsA("BasePart") then
+                  Base.CanCollide = false
+                end
+              end
+            end
+            task.wait()
+          end
+
+          local Character = Player.Character
+
+          if Character then
+            for _, Base in ipairs(Character:GetDescendants()) do
+              if Base:IsA("BasePart") then
+                Base.CanCollide = true
+              end
+            end
+          end
+        end)
+      end)
+  end)
+
+  Funcs:Toggle(_LP, "Infinite Jump", "", "Save", function(Value)
+    SaveManager:SetSave("Infinite Jump", Value)
+    _spawn(function()
+      if _Connect["InfJump"] then
+        _Connect["InfJump"]:Disconnect()
+        _Connect["InfJump"] = nil
+      end
+
+      _Connect["InfJump"] = UserInputService.JumpRequest:Connect(function()
+        if not _G.NoLagHub then
+          _Connect["InfJump"]:Disconnect()
+          _Connect["InfJump"] = nil
+          return
+        end
+
+        if _SaveConfig["Infinite Jump"] then
+          Player.Character.Humanoid:ChangeState("Jumping")
+        end
+      end)
+    end)
+  end)
+
+  Funcs:Toggle(_LP, "Fly", "", "Save", function(Value)
+    SaveManager:SetSave("Fly", Value)
+    _spawn(function()
+
+    end)
+  end)
+end
+
 
 local _MoreFPS = Misc:AddSection("More FPS") do
   Funcs:Toggle(_MoreFPS, "Reduce Lag", "", "Save", function(Value)
