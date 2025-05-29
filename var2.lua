@@ -726,6 +726,7 @@ local GameModule = {} do
 
     function GameModule:placeRandomEgg()
         print("placeRandomEgg")
+
         -- First get the player's garden
         local garden = GameModule:GetGarden()
         local GARDEN_SIZE_X = 31
@@ -737,6 +738,7 @@ local GameModule = {} do
 
         local existingEggs = {}
         if garden.Important.Object_Physical then
+            print("Garden")
             for _, obj in pairs(garden.Important.Object_Physical:GetChildren()) do
                 if obj:IsA("Model") and obj.Name == "PetEgg" then
                     local hitbox = obj:FindFirstChild("PetEgg")
@@ -747,6 +749,7 @@ local GameModule = {} do
                 end
             end
         end
+
         print("Find Random Pos")
         while attempt < maxAttempts do
             attempt += 1
