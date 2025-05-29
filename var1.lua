@@ -728,7 +728,8 @@ local GameModule = {} do
         print("placeRandomEgg - Starting")
 
         -- First get the player's garden
-        local garden = GameModule:GetPlantLocation(1)
+        local plant_pos = GameModule:GetPlantLocation(1)
+        local garden = GameModule:GetGarden()
         if not garden then
             warn("Could not find garden!")
             return
@@ -740,7 +741,7 @@ local GameModule = {} do
         local ITEM_SIZE = 5
         local maxAttempts = 100
         local attempt = 0
-        local gardenCenter = garden.CFrame.Position
+        local gardenCenter = plant_pos.CFrame.Position
 
         print("Garden center:", gardenCenter)
 
