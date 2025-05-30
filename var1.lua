@@ -1,9 +1,8 @@
-
 if _G.NoLag then return end
 _G.NoLag = true
 _G.highUNC = false
 
-local version = "6.25"
+local version = "6.3"
 local name_game = "Grow A Garden"
 local Fluent = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/UI_FLUENT.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/NoLag-id/UI_ROBLOX/refs/heads/main/Temp_save.lua"))()
@@ -151,6 +150,7 @@ end
 -- [Game Variable]
 local Config = {
     Dupe2 = false,
+    DupeMulti = 1,
     AutoBuyEvent = false,
     AutoBuyEvent2 = false,
     AutoCollect = false,
