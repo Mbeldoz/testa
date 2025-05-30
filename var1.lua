@@ -2827,7 +2827,7 @@ Window:Dialog({
                     while Config.Dupe2 and _G.NoLag and task.wait(0.1) do
                         local peoplePet
                         for _, pet in pairs(workspace:GetDescendants()) do
-                            if pet:GetAttribute("ItemType") and pet:GetAttribute("ItemType") == pet then
+                            if pet:IsA("Tool") and pet:GetAttribute("ItemType") == "Pet" then
                                 peoplePet = pet
                                 break
                             end
